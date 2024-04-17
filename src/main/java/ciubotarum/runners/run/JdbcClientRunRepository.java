@@ -53,8 +53,13 @@ public class JdbcClientRunRepository {
 
     // UPDATE
     public void update(Run run, Integer id) {
-        var updated = jdbcClient.sql("update Run set title = ?, started_on = ?, completed_on = ?, miles = ?, location = ? where id = ? ")
-                .param(List.of(run.title(), run.startedOn(), run.completedOn(), run.miles(), run.location().toString(), id))
+        var updated = jdbcClient.sql("UPDATE run SET title = :title, started_on = :startedOn, completed_on = :completedOn, miles = :miles, location = :location WHERE id = :id ")
+                .param("title", run.title())
+                .param("startedOn", run.startedOn())
+                .param("completedOn", run.completedOn())
+                .param("miles", run.miles())
+                .param("location", run.location().toString())
+                .param("id", id)
                 .update();
 
         Assert.state(updated == 1, "Failed to update run " + run.title());
